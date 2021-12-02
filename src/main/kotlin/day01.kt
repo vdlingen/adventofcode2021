@@ -1,6 +1,6 @@
 package day01
 
-val input = readInput("day01.txt")
+val input = util.readInput("day01.txt")
     .split("\n")
     .map { it.toInt() }
 

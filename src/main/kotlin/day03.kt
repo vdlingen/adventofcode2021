@@ -22,11 +22,12 @@ fun part2(): Int {
         .fold(input) { acc, i ->
             if (acc.size == 1) return@fold acc
 
-            acc.map { it[i] }
+            val mostCommon = acc.map { it[i] }
                 .groupBy { it }
                 .toSortedMap(compareByDescending { it })
                 .maxByOrNull { it.value.size }!!.key
-                .let { value -> acc.filter { it[i] == value } }
+
+            acc.filter { it[i] == mostCommon }
         }
         .first()
         .toInt(2)
@@ -35,11 +36,12 @@ fun part2(): Int {
         .fold(input) { acc, i ->
             if (acc.size == 1) return@fold acc
 
-            acc.map { it[i] }
+            val leastCommon = acc.map { it[i] }
                 .groupBy { it }
                 .toSortedMap()
                 .minByOrNull { it.value.size }!!.key
-                .let { value -> acc.filter { it[i] == value } }
+
+            acc.filter { it[i] == leastCommon }
         }
         .first()
         .toInt(2)

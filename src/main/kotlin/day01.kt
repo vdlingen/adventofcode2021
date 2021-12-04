@@ -7,9 +7,7 @@ val input = util.readInput("day01.txt")
 fun List<Int>.countIncreases() = filterIndexed { index, value -> index > 0 && value > this[index - 1] }.size
 
 fun part1() = input.countIncreases()
-fun part2() = input.mapIndexedNotNull { index, value ->
-    if (index < input.size - 2) value + input[index + 1] + input[index + 2] else null
-}.countIncreases()
+fun part2() = input.windowed(3).map { it.sum() }.countIncreases()
 
 fun main() {
     println("part 1 = ${part1()}")

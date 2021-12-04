@@ -1,7 +1,5 @@
 package day04
 
-import java.util.regex.Pattern
-
 val input = util.readInput("day04.txt")
     .split("\n")
 
@@ -9,13 +7,7 @@ val order = input[0].split(",").map { it.toInt() }
 val boards = input.subList(1, input.size)
     .filterNot { it.isEmpty() }
     .chunked(5)
-    .map {
-        val rows = it.map {
-            it.trim().replace("  ", " ").split(Pattern.compile(" ")).map { it.toInt() }
-        }
-
-        Board(rows)
-    }
+    .map { Board(it.map { it.trim().replace("  ", " ").split(" ").map { it.toInt() } }) }
 
 data class Board(val rows: List<List<Int>>) {
     val lines = rows + rows.indices.map { column -> rows.map { it[column] } }

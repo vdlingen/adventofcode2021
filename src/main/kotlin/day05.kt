@@ -1,6 +1,6 @@
 package day05
 
-import util.toward
+import util.upOrDownTo
 
 val input = util.readInput("day05.txt")
     .split("\n")
@@ -14,12 +14,12 @@ data class Point(val x: Int, val y: Int)
 data class Line(val a: Point, val b: Point)
 
 fun Line.points(diagonal: Boolean = false) = when {
-    a.x == b.x -> a.y.toward(b.y).map { Point(a.x, it) }
-    a.y == b.y -> a.x.toward(b.x).map { Point(it, a.y) }
+    a.x == b.x -> a.y.upOrDownTo(b.y).map { Point(a.x, it) }
+    a.y == b.y -> a.x.upOrDownTo(b.x).map { Point(it, a.y) }
 
     diagonal -> {
-        val rangeX = a.x.toward(b.x).toList()
-        val rangeY = a.y.toward(b.y).toList()
+        val rangeX = a.x.upOrDownTo(b.x).toList()
+        val rangeY = a.y.upOrDownTo(b.y).toList()
 
         rangeX.indices.map { Point(rangeX[it], rangeY[it]) }
     }

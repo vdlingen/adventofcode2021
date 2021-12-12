@@ -1,13 +1,14 @@
 package day12
 
+val input = util.readInput("day12.txt")
+    .split("\n")
+
 val reachable = buildMap<String, Set<String>> {
-    util.readInput("day12.txt")
-        .split("\n")
-        .forEach {
-            val (a, b) = it.split("-")
-            this[a] = (this[a] ?: emptySet()) + b
-            this[b] = (this[b] ?: emptySet()) + a
-        }
+    input.forEach {
+        val (a, b) = it.split("-")
+        this[a] = (this[a] ?: emptySet()) + b
+        this[b] = (this[b] ?: emptySet()) + a
+    }
 }
 
 fun findPaths(

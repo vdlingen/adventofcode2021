@@ -16,9 +16,9 @@ fun findPaths(
 ): List<List<String>> =
     reachable[visited.last()]?.flatMap { next ->
         when {
-            next.all { it.isLowerCase() } && visited.count { it == next } > if (next == allowTwice) 1 else 0 -> emptyList()
             next == "start" -> emptyList()
             next == "end" -> listOf(visited + next)
+            next.all { it.isLowerCase() } && visited.count { it == next } > if (next == allowTwice) 1 else 0 -> emptyList()
             else -> findPaths(visited + next, allowTwice)
         }
     } ?: emptyList()

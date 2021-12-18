@@ -4,31 +4,22 @@ val input = util.readInput("day18.txt")
     .split("\n")
     .map { it.parseNumber() }
 
-sealed class Number() {
+sealed class Number {
     data class Value(val v: Int, val index: Int) : Number()
     data class Pair(val a: Number, val b: Number, val index: Int) : Number()
 }
 
-val Number.isPair: Boolean
-    get() = this is Number.Pair && this.a is Number.Value && this.b is Number.Value
-
 operator fun Number.plus(number: Number) = Number.Pair(this, number, -1).print().parseNumber().reduce()
 
-fun Number.candidateToExplode(depth: Int = 0): Number.Pair? {
-    if (depth == 4 && isPair) return this as Number.Pair
-
-    if (this is Number.Pair) {
-        return a.candidateToExplode(depth + 1) ?: b.candidateToExplode(depth + 1)
-    }
-
-    return null
+fun Number.candidateToExplode(depth: Int = 0): Number.Pair? = when {
+    depth == 4 && this is Number.Pair && a is Number.Value && b is Number.Value -> this
+    this is Number.Pair -> a.candidateToExplode(depth + 1) ?: b.candidateToExplode(depth + 1)
+    else -> null
 }
 
-fun Number.values(): List<Number.Value> = buildList {
-    when (this@values) {
-        is Number.Value -> add(this@values)
-        is Number.Pair -> addAll(a.values() + b.values())
-    }
+fun Number.values(): List<Number.Value> = when (this) {
+    is Number.Value -> listOf(this)
+    is Number.Pair -> a.values() + b.values()
 }
 
 fun Number.candidateToSplit() = values().find { it.v >= 10 }
@@ -99,20 +90,8 @@ fun String.parseNumber(offset: Int = 0): Number = when {
 }
 
 fun part1() = input.reduce { a, b -> (a + b).reduce() }.magnitude()
-fun part2(): Int {
-    var max = 0
-    for (i in 0 until input.size) {
-        for (j in i+1 until input.size) {
-            max = maxOf(
-                max,
-                (input[i] + input[j]).magnitude(),
-                (input[j] + input[i]).magnitude(),
-            )
-        }
-    }
-
-    return max
-}
+fun part2() = input.flatMapIndexed { i, a -> input.subList(i + 1, input.size).flatMap { b -> listOf(a + b, b + a) } }
+    .maxOf { it.magnitude() }
 
 fun main() {
     println("part 1 = ${part1()}")

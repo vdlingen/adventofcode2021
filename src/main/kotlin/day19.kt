@@ -88,21 +88,28 @@ fun solve(): Pair<Set<Pos>, List<ScannerPosition>> {
     scannerPositions[0] = ScannerPosition(Pos(0, 0, 0), orientations[0])
     beacons += input[0]
 
-    while (scannerPositions.size < input.size) {
-        val positions = scannerPositions.toMap()
+    var toCheck = setOf(0)
 
-        input.indices.filterNot { it in positions.keys }.forEach { index ->
+    while (toCheck.isNotEmpty()) {
+        val found = mutableSetOf<Int>()
+
+        input.indices.filterNot { it in scannerPositions.keys }.forEach { index ->
             val scans = input[index]
 
-            positions.entries.forEach { (i, position) ->
+            toCheck.forEach { i ->
+                val position = scannerPositions[i]!!
                 val knownScans = position.convert(input[i])
 
                 scans.findOrientation(knownScans)?.let { scannerPosition ->
                     scannerPositions[index] = scannerPosition
                     beacons += scannerPosition.convert(scans)
+
+                    found += index
                 }
             }
         }
+
+        toCheck = found
     }
 
     return Pair(beacons, scannerPositions.values.toList())
@@ -123,4 +130,4 @@ fun part2() = solution.second.let { scannerPositions ->
 fun main() = measureTimeMillis {
     println("part 1 = ${part1()}")
     println("part 2 = ${part2()}")
-}.let { println("Execution took $it ms") }
+}.let { println("\nExecution took $it ms") }
